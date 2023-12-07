@@ -9,11 +9,15 @@ import SliderControl from '@/components/SliderControl';
 import Equation from './Equation';
 import styles from './DivisionGroupsDemo.module.css';
 
+import { LayoutGroup, motion } from 'framer-motion';
+
 function DivisionGroupsDemo({
   numOfItems = 12,
   initialNumOfGroups = 1,
   includeRemainderArea,
 }) {
+  const id = React.useId();
+
   const [numOfGroups, setNumOfGroups] = React.useState(
     initialNumOfGroups
   );
@@ -54,25 +58,28 @@ function DivisionGroupsDemo({
         />
       </header>
 
+      <LayoutGroup>
       <div className={styles.demoWrapper}>
-        <div
+        <motion.div
           className={clsx(styles.demoArea)}
           style={gridStructure}
         >
           {range(numOfGroups).map((groupIndex) => (
-            <div key={groupIndex} className={styles.group}>
+            <motion.div key={groupIndex} className={styles.group}>
               {range(numOfItemsPerGroup).map((index) => {
                 return (
-                  <div
-                    key={index}
+                  <motion.div layoutId={`test-${groupIndex}-${index}`}
+                    key={`test-${groupIndex}-${index}`}
+                    id={`test-${groupIndex}-${index}`}
                     className={styles.item}
                   />
                 );
               })}
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
+      </LayoutGroup>
 
       {includeRemainderArea && (
         <div className={styles.remainderArea}>
