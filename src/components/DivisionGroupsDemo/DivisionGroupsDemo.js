@@ -43,6 +43,7 @@ function DivisionGroupsDemo({
         };
 
   return (
+    <LayoutGroup>
     <Card as="section" className={styles.wrapper}>
       <header className={styles.header}>
         <SliderControl
@@ -58,7 +59,6 @@ function DivisionGroupsDemo({
         />
       </header>
 
-      <LayoutGroup>
       <div className={styles.demoWrapper}>
         <motion.div
           className={clsx(styles.demoArea)}
@@ -67,19 +67,19 @@ function DivisionGroupsDemo({
           {range(numOfGroups).map((groupIndex) => (
             <motion.div key={groupIndex} className={styles.group}>
               {range(numOfItemsPerGroup).map((index) => {
+                const layoutId = `${id}-${groupIndex * numOfItemsPerGroup + index}`;
                 return (
-                  <motion.div layoutId={`test-${groupIndex}-${index}`}
-                    key={`test-${groupIndex}-${index}`}
-                    id={`test-${groupIndex}-${index}`}
+                  <motion.div layoutId={layoutId}
+                    key={layoutId}
                     className={styles.item}
-                  />
+                  >
+                  </motion.div>
                 );
               })}
             </motion.div>
           ))}
         </motion.div>
       </div>
-      </LayoutGroup>
 
       {includeRemainderArea && (
         <div className={styles.remainderArea}>
@@ -87,9 +87,14 @@ function DivisionGroupsDemo({
             Remainder Area
           </p>
 
-          {range(remainder).map((index) => {
+          {range(remainder).reverse().map((index) => {
+            console.log(`index=${index}`);
+            const layoutId=`${id}-${numOfItems - remainder + index}`
+            console.log(`layoutId=${layoutId}`);
+
             return (
-              <div key={index} className={styles.item} />
+              <motion.div key={layoutId} className={styles.item} layoutId={layoutId}>
+              </motion.div>
             );
           })}
         </div>
@@ -101,6 +106,7 @@ function DivisionGroupsDemo({
         remainder={remainder}
       />
     </Card>
+    </LayoutGroup>
   );
 }
 
