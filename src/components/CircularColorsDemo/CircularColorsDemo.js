@@ -12,6 +12,8 @@ import VisuallyHidden from '@/components/VisuallyHidden';
 
 import styles from './CircularColorsDemo.module.css';
 
+import { LayoutGroup, motion } from 'framer-motion';
+
 const COLORS = [
   { label: 'red', value: 'hsl(348deg 100% 60%)' },
   { label: 'yellow', value: 'hsl(50deg 100% 55%)' },
@@ -19,13 +21,10 @@ const COLORS = [
 ];
 
 function CircularColorsDemo() {
-  // TODO: This value should increase by 1 every second:
+  const id = React.useId();
   const [timeElapsed, setTimeElapsed] = React.useState(0);
   const [isRunning, setIsRunning] = React.useState(false);
-
-  // TODO: This value should cycle through the colors in the
-  // COLORS array:
-  const selectedColor = COLORS[0];
+  const selectedColor = COLORS[timeElapsed % 3];
 
   React.useEffect(() => {
     let intervalId = null;
@@ -56,7 +55,7 @@ function CircularColorsDemo() {
               key={index}
             >
               {isSelected && (
-                <div
+                <motion.div layoutId={id}
                   className={
                     styles.selectedColorOutline
                   }
