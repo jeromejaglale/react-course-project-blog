@@ -55,7 +55,7 @@ function CircularColorsDemo() {
               key={index}
             >
               {isSelected && (
-                <motion.div layoutId={id}
+                <motion.div layoutId={`selected-color-outline-${id}`}
                   className={
                     styles.selectedColorOutline
                   }
@@ -92,10 +92,11 @@ function CircularColorsDemo() {
             }
             else {
               setIsRunning(true);              
+              setTimeElapsed(timeElapsed + 1);
             }
           }}>
             {isRunning ? <Pause /> :  <Play />}
-            <VisuallyHidden>Play</VisuallyHidden>
+            <VisuallyHidden>{isRunning ? 'Pause' :  'Play'}</VisuallyHidden>
           </button>
           <button onClick={() => {
             setIsRunning(false);
