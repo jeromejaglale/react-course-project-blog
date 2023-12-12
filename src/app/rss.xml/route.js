@@ -1,32 +1,33 @@
 import { getBlogPostList } from '@/helpers/file-helpers';
+import RSS from 'rss';
 
-export const dynamic = 'force-dynamic' // defaults to auto
+import {
+  BLOG_TITLE,
+  BLOG_DESCRIPTION,
+} from '@/constants';
  
 export async function GET() { 
 /* create rss feed */
-var RSS = require('rss');
 var feed = new RSS({
-    title: 'Bits & Bytes',
-    custom_namespaces: {
-      'itunes': 'http://www.itunes.com/dtds/podcast-1.0.dtd'
-    },
+    title: BLOG_TITLE,
+    description: BLOG_DESCRIPTION,
 });
 
 const blogPostList = await getBlogPostList();
 
 /* loop over data and add to feed */
-blogPostList.map(p => {
+blogPostList.forEach(p => {
 	feed.item({
 	    title: p.title,
 	    description: p.abstract,
 	    url: `localhost/${p.slug}`,
-	    date: new Date(p.publishedOn), // any format that js Date can parse.
+	    date: p.publishedOn, // any format that js Date can parse.
 	});
 
 });
  
 // cache the xml to send to clients
-var xml = feed.xml();
+var xml = feed.xml({ indent: true });
 
   return new Response(xml, {
     headers: { 'Content-Type': 'application/xml' },
