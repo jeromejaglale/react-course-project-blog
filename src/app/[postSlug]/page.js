@@ -10,6 +10,7 @@ import { loadBlogPost } from '@/helpers/file-helpers';
 
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import dynamic from 'next/dynamic';
+import { notFound } from 'next/navigation';
 
 const DivisionGroupsDemo = dynamic(
   () => import('@/components/DivisionGroupsDemo'),
@@ -22,35 +23,43 @@ const CircularColorsDemo = dynamic(
 );
 
 export async function generateMetadata({ params }) {
-  const {frontmatter, content} = await loadBlogPost(params.postSlug);
+  try {
+    const {frontmatter, content} = await loadBlogPost(params.postSlug);
 
-  return {
-    title: frontmatter.title,
-    description: frontmatter.abstract
-  };
+    return {
+      title: frontmatter.title,
+      description: frontmatter.abstract
+    };
+  } catch (error) {
+    notFound();
+  }
 }
 
 async function BlogPost({params}) {
-  const {frontmatter, content} = await loadBlogPost(params.postSlug);
+  try {
+    const {frontmatter, content} = await loadBlogPost(params.postSlug);
 
-  return (
-    <article className={styles.wrapper}>
-      <BlogHero
-        title={frontmatter.title}
-        publishedOn={new Date(frontmatter.publishedOn)}
-      />
-      <div className={styles.page}>
-        <MDXRemote
-          source={content}
-          components={{
-            DivisionGroupsDemo,
-            CircularColorsDemo,
-            pre: CodeSnippet,
-          }}
+    return (
+      <article className={styles.wrapper}>
+        <BlogHero
+          title={frontmatter.title}
+          publishedOn={new Date(frontmatter.publishedOn)}
         />
-      </div>
-    </article>
-  );
+        <div className={styles.page}>
+          <MDXRemote
+            source={content}
+            components={{
+              DivisionGroupsDemo,
+              CircularColorsDemo,
+              pre: CodeSnippet,
+            }}
+          />
+        </div>
+      </article>
+    );
+  } catch (error) {
+    notFound();
+  }
 }
 
 export default BlogPost;
